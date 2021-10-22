@@ -1,0 +1,33 @@
+/include/ "system-conf.dtsi"
+/ {
+};
+&gem0 {
+local-mac-address = [00 0a 35 00 01 10];
+phy-mode = "rgmii-id";
+status = "okay";
+xlnx,ptp-enet-clock = <0x69f6bcb>;
+phy-handle = <&phy0>;
+
+phy0: phy@0 {
+//compatible = "marvell,88e1510";
+device_type = "ethernet-phy";
+xlnx,phy-type = <5>;
+reg = <0>;
+};
+};
+
+&gem1 {
+local-mac-address = [00 0a 35 00 01 13];
+phy-mode = "rgmii-id";
+status = "okay";
+xlnx,ptp-enet-clock = <0x69f6bcb>;
+phy-handle = <&phy1>;
+
+phy1: phy@1 {
+//compatible = "marvell,88e1510";
+device_type = "ethernet-phy";
+xlnx,phy-type = <5>;
+reg = <1>;
+};
+};
+
