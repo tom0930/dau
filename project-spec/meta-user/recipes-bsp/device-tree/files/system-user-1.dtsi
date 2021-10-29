@@ -1,0 +1,15 @@
+/{
+
+	chosen {
+
+		bootargs = "earlycon console=ttyPS0,115200";
+
+	};
+
+		axi_vdma_lcd{
+			compatible = "topic,vdma-fb";
+			dmas = <&axi_vdma_0 0>;
+			dma-names = "axivdma";
+		}; 
+
+};

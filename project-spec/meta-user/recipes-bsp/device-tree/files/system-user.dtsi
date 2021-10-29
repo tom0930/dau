@@ -1,5 +1,101 @@
 /include/ "system-conf.dtsi"
+/*/include/ "system-user-1.dtsi"*/
 / {
+
+
+ amba_pl: amba_pl{
+ 
+ 
+ 
+ 		axi_vdma_0: dma@83000000 {
+			#dma-cells = <1>;
+			clock-names = "s_axi_lite_aclk", "m_axi_mm2s_aclk", "m_axi_mm2s_aclk";
+			clocks = <&clkc 15>, <&clkc 15>, <&clkc 15>;
+			compatible = "xlnx,axi-vdma-1.00.a";
+			interrupt-parent = <&intc>;
+			interrupts = <0 29 4>;
+			reg = <0x83000000 0x10000>;
+			xlnx,addrwidth = <0x20>;
+			xlnx,flush-fsync = <0x1>;
+			xlnx,num-fstores = <0x3>;
+			dma-channel@43000000 {
+				compatible = "xlnx,axi-vdma-mm2s-channel";
+				interrupts = <0 29 4>;
+				xlnx,datawidth = <0x20>;
+				xlnx,device-id = <0x0>;
+			};
+		};
+   
+ /* pl.dtsi
+ axi_vdma_0: dma@43000000 {
+			#dma-cells = <1>;
+			clock-names = "s_axi_lite_aclk", "m_axi_mm2s_aclk", "m_axis_mm2s_aclk", "m_axi_s2mm_aclk", "s_axis_s2mm_aclk";
+			clocks = <&clkc 15>, <&clkc 15>, <&clkc 15>, <&clkc 15>, <&clkc 16>;
+			compatible = "xlnx,axi-vdma-6.3", "xlnx,axi-vdma-1.00.a";
+			interrupt-names = "mm2s_introut", "s2mm_introut";
+			interrupt-parent = <&intc>;
+			interrupts = <0 29 4 0 30 4>;
+			reg = <0x43000000 0x10000>;
+			xlnx,addrwidth = <0x20>;
+			xlnx,flush-fsync = <0x1>;
+			xlnx,num-fstores = <0x3>;
+			dma-channel@43000000 {
+				compatible = "xlnx,axi-vdma-mm2s-channel";
+				interrupts = <0 29 4>;
+				xlnx,datawidth = <0x18>;
+				xlnx,device-id = <0x0>;
+				xlnx,genlock-mode ;
+			};
+			dma-channel@43000030 {
+				compatible = "xlnx,axi-vdma-s2mm-channel";
+				interrupts = <0 30 4>;
+				xlnx,datawidth = <0x20>;
+				xlnx,device-id = <0x0>;
+				xlnx,genlock-mode ;
+			};
+		};
+ 
+ */
+ 		axi_vdma_lcd{
+			compatible = "topic,vdma-fb";
+			dmas = <&axi_vdma_0 1>;
+			dma-names = "axivdma";
+		};
+   
+   v_tc_0: v_tc@43c00000 {
+			clock-names = "clk", "s_axi_aclk";
+			clocks = <&clkc 16>, <&clkc 15>;
+			compatible = "xlnx,v-tc-6.1", "xlnx,v-tc-6.1";
+			reg = <0x43c00000 0x10000>;
+			xlnx,detector ;
+			xlnx,generator ;
+		};
+   
+ /*
+                #address-cells = <1>;
+                #size-cells = <1>;
+                compatible = "simple-bus";
+                ranges;
+                irq: irq@0{
+                        compatible = "hello,irq";
+                        interrupt-parent = <&intc>;
+                        interrupts = <0 29 2>;
+                };
+                */
+                
+        };
+        /* 
+	@amba_pl{   
+		v_tc{
+			clock-names = "clk", "s_axi_aclk";
+			clocks = <&clkc 16>, <&clkc 15>;
+			compatible = "xlnx,v-tc-6.1", "xlnx,v-tc-6.1";
+			reg = <0x43c00000 0x10000>;
+			xlnx,detector ;
+			xlnx,generator ;
+		};   
+   };
+   */
 };
 &gem0 {
 local-mac-address = [00 0a 35 00 01 10];
@@ -30,4 +126,81 @@ xlnx,phy-type = <5>;
 reg = <1>;
 };
 };
+/*
+&amba_pl{
+axidma_chrdev: axidma_chrdev@0 {
+compatible = "xlnx,axidma-chrdev";
+            dmas = <&axi_dma_0 0 &axi_dma_0 1>;
+            dma-names = "tx_channel", "rx_channel";
+    };
+};
+*/
+   
+   
+&i2c1 {                          // 根据 zynq-7000.dtsi，选择了i2c1
+    status = "okay";			 // 开启
+    #address-cells = <1>; 
+    #size-cells = <0>;
+    
+    
+    hycon@38 {
+    
+    compatible = "hycon, hy46xx_ts";
+    reg = <0x38>;
+        	
+   /*           
+ interrupt-parent = <&msm_gpio>;
+ interrupts = <13 0x8>; 
+ vdd-supply = <&pm8916_l17>;
+ vcc_i2c-supply = <&pm8916_l6>; 
+ hycon,name = "hys"; 
+ hycon,family-id = <0x54>;
+ 
+ hycon,reset-gpio = <&msmgpio 16 0x00>;
+ hycon,irq-gpio =<&msm_gpio 13 0x00>;
+ hycon,id1-gpio = <&msm_gpio 109 0x00>;
+ hycon,id2-gpio = <&msm_gpio 114 0x00>;
+ hycon,id3-gpio = <&msm_gpio 121 0x00>;
+ */ 
+ hycon,display-coords = <0 0 480 854>;
+ hycon,panel-coords = <0 0 1080 2000>;
+ hycon,button-map= <70 150 907>;
+ hycon,no-force-update;
+ hycon,i2c-pull-up;
+ hycon,group-id = <1>;
+ hycon,hard-reset-delay-ms = <20>;
+ hycon,num-max-touches = <10>;        
+             
+              
+    };
+};
 
+
+
+/*
+ hycon@38 {
+ compatible = "hycon, hy46xx_ts";
+ reg = <0x38>;
+ interrupt-parent = <&msm_gpio>;
+ interrupts = <13 0x8>;
+ vdd-supply = <&pm8916_l17>;
+ vcc_i2c-supply = <&pm8916_l6>; 
+ hycon,name = "hys"; 
+ hycon,family-id = <0x54>;
+ hycon,reset-gpio = <&msmgpio 16 0x00>;
+ hycon,irq-gpio =<&msm_gpio 13 0x00>;
+Driver porting guide(Qualcomm Platform )
+ hycon,id1-gpio = <&msm_gpio 109 0x00>;
+ hycon,id2-gpio = <&msm_gpio 114 0x00>;
+ hycon,id3-gpio = <&msm_gpio 121 0x00>; 
+ hycon,display-coords = <0 0 480 854>;
+ hycon,panel-coords = <0 0 1080 2000>;
+ hycon,button-map= <70 150 907>;
+ hycon,no-force-update;
+ hycon,i2c-pull-up;
+ hycon,group-id = <1>;
+ hycon,hard-reset-delay-ms = <20>;
+ hycon,num-max-touches = <10>;
+ 
+ };
+ */
