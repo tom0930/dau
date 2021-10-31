@@ -2,7 +2,10 @@
 /*/include/ "system-user-1.dtsi"*/
 / {
 
-
+chosen {
+			bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rw rootwait cma=1024M";
+		};
+   
  amba_pl: amba_pl{
  
  
@@ -70,8 +73,13 @@
 			xlnx,detector ;
 			xlnx,generator ;
 		};
+   /*
+chosen {
+	      bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rw rootwait cma=1024M";
+        //bootargs = "console=ttyPS0,115200 earlyprintk uio_pdrv_genirq.of_id=generic-uio";
+    };   
    
- /*
+
                 #address-cells = <1>;
                 #size-cells = <1>;
                 compatible = "simple-bus";
@@ -135,7 +143,8 @@ compatible = "xlnx,axidma-chrdev";
     };
 };
 */
-   
+  
+  
    
 &i2c1 {                          // 根据 zynq-7000.dtsi，选择了i2c1
     status = "okay";			 // 开启
@@ -204,3 +213,10 @@ Driver porting guide(Qualcomm Platform )
  
  };
  */
+ 
+ /*
+usb@e0002000 {
+			dr_mode = "host";
+			clocks = <0x1 0x1c>;
+		};
+   */
